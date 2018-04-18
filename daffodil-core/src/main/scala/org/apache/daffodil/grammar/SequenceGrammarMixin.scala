@@ -19,15 +19,16 @@ package org.apache.daffodil.grammar
 import org.apache.daffodil.schema.annotation.props.gen._
 import org.apache.daffodil.grammar.primitives.SequenceCombinator
 import org.apache.daffodil.dsom.SequenceTermBase
+import org.apache.daffodil.grammar.primitives.LayeredSequence
 
 trait SequenceGrammarMixin extends GrammarMixin { self: SequenceTermBase =>
 
   final override lazy val groupContent = prod("groupContent") {
-    self.sequenceKind match {
-      case SequenceKind.Ordered => orderedSequenceContent
-      case SequenceKind.Unordered => subsetError("Unordered sequences are not supported.") // unorderedSequenceContent
+      self.sequenceKind match {
+        case SequenceKind.Ordered => orderedSequenceContent
+        case SequenceKind.Unordered => subsetError("Unordered sequences are not supported.") // unorderedSequenceContent
+      }
     }
-  }
 
   private lazy val orderedSequenceContent = prod("sequenceContent") {
     SequenceCombinator(this, terms)
@@ -38,7 +39,7 @@ trait SequenceGrammarMixin extends GrammarMixin { self: SequenceTermBase =>
   //    UnorderedSequenceCombinator(this, uoseq.terms)
   //  }
 
-  protected lazy val terms = groupMembers.map { _.asTermInSequence }
+  protected lazy val terms = groupMembers // .map { _.asTermInSequence }
 
   /**
    * These are static properties even though the delimiters can have runtime-computed values.
