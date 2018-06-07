@@ -287,13 +287,21 @@ trait ElementRuntimeValuedPropertiesMixin
     ev
   }
 
+  private lazy val explicitLengthEv: ExplicitLengthEv = {
+    Assert.usage(lengthKind eq LengthKind.Prefixed)
+    val ev = new PrefixedLengthEv(lengthExpr, erd)
+    ev.compile()
+    ev
+  }
+
   final lazy val lengthEv = {
     val ev =
       lengthKind match {
         case LengthKind.Explicit => explicitLengthEv
         case LengthKind.Implicit => implicitLengthEv
+        case LengthKind.Prefixed => prefixedLengthEv
         case _ =>
-          Assert.usageError("should only be used for Explicit or Implicit length kinds: " + lengthKind)
+          Assert.usageError("should only be used for Explicit, Implicit, or Prefixed length kinds: " + lengthKind)
       }
     Assert.invariant(ev.isCompiled)
     ev

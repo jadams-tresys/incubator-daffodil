@@ -71,6 +71,32 @@ class ImplicitLengthEv(lengthValue: Long, rd: ElementRuntimeData)
   }
 }
 
+class PrefixedLengthEv(expr: CompiledExpression[JLong], rd: ElementRuntimeData)
+  extends EvaluatableExpression[JLong](
+    expr,
+    rd)
+  with LengthEv
+  with InfosetCachedEvaluatable[JLong] {
+  override lazy val runtimeDependencies = Nil
+
+  /**
+   * Length is special. For the dfdl:length property, when it's an expression
+   * we use blocking mode when unparsing.
+   *
+   * Most (all?) other Evaluatables for runtime-valued properties will use
+   * UnparserNonBlocking when unparsing.
+   */
+  override protected final def maybeUseUnparserMode: Maybe[EvalMode] = Maybe(UnparserBlocking)
+
+  override def compute(state: State): JLong = {
+    val v: JLong = super.compute(state)
+    if (v < 0) {
+      state.SDE("dfdl:length expression result must be non-negative, but was: %d", v)
+    }
+    v
+  }
+}
+
 /*
  * We need Evaluatables that let us tease apart the different algorithmic cases
  * for determining length.
