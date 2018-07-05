@@ -488,7 +488,7 @@ trait ElementBaseGrammarMixin
     case LengthKind.Delimited if (binaryNumberRep == BinaryNumberRep.Binary) => subsetError("lengthKind='delimited' only supported for packed binary formats.")
     case LengthKind.Delimited => -1 // only for packed binary data, length must be computed at runtime.
     case LengthKind.Pattern => schemaDefinitionError("Binary data elements cannot have lengthKind='pattern'.")
-    case LengthKind.Prefixed => subsetError("lengthKind='prefixed' not yet supported.")
+    case LengthKind.Prefixed => -1 // means must be computed at runtime.
     case LengthKind.EndOfParent => schemaDefinitionError("Binary data elements cannot have lengthKind='endOfParent'.")
   }
 
@@ -518,6 +518,7 @@ trait ElementBaseGrammarMixin
   private lazy val stringPrim = {
     lengthKind match {
       case LengthKind.Explicit => specifiedLength(StringOfSpecifiedLength(this))
+      case LengthKind.Prefixed => specifiedLength(StringOfSpecifiedLength(this))
       case LengthKind.Delimited => stringDelimitedEndOfData
       case LengthKind.Pattern => specifiedLength(StringOfSpecifiedLength(this))
       case LengthKind.Implicit => {
@@ -539,6 +540,7 @@ trait ElementBaseGrammarMixin
     lengthKind match {
       case LengthKind.Explicit => specifiedLengthHexBinary
       case LengthKind.Implicit => specifiedLengthHexBinary
+      case LengthKind.Prefixed => specifiedLengthHexBinary
       case LengthKind.Delimited => hexBinaryDelimitedEndOfData
       case LengthKind.Pattern => hexBinaryLengthPattern
       case LengthKind.EndOfParent if isComplexType => notYetImplemented("lengthKind='endOfParent' for complex type")
@@ -928,7 +930,7 @@ trait ElementBaseGrammarMixin
               LiteralValueNilOfSpecifiedLength(this)
             }
             case LengthKind.Implicit if isComplexType => Assert.invariantFailed("literal nil complex types aren't handled here.")
-            case LengthKind.Prefixed => notYetImplemented("lengthKind='prefixed'")
+            case LengthKind.Prefixed => LiteralValueNilOfSpecifiedLength(this)
             case LengthKind.EndOfParent if isComplexType => notYetImplemented("lengthKind='endOfParent' for complex type")
             case LengthKind.EndOfParent => notYetImplemented("lengthKind='endOfParent' for simple type")
           }
