@@ -26,6 +26,7 @@ import org.apache.daffodil.processors.ByteOrderEv
 import org.apache.daffodil.processors.CharsetEv
 import org.apache.daffodil.processors.EncodingEv
 import org.apache.daffodil.processors.ExplicitLengthEv
+import org.apache.daffodil.processors.PrefixedLengthEv
 import org.apache.daffodil.processors.FillByteEv
 import org.apache.daffodil.processors.ImplicitLengthEv
 import org.apache.daffodil.processors.InitiatorParseEv
@@ -264,6 +265,10 @@ trait ElementRuntimeValuedPropertiesMixin
     ExpressionCompilers.JLong.compileProperty(qn, NodeInfo.Long, lengthRaw, decl)
   }
 
+  protected final lazy val prefixedLengthExpr = {
+    val qn = this.qNameForProperty("prefixedLengthType")
+    ExpressionCompilers.JLong.compileProperty(qn, NodeInfo.Long, lengthRaw, decl)
+  }
   private lazy val explicitLengthEv: ExplicitLengthEv = {
     Assert.usage(lengthKind eq LengthKind.Explicit)
     val ev = new ExplicitLengthEv(lengthExpr, erd)
@@ -287,9 +292,9 @@ trait ElementRuntimeValuedPropertiesMixin
     ev
   }
 
-  private lazy val explicitLengthEv: ExplicitLengthEv = {
+  private lazy val prefixedLengthEv: PrefixedLengthEv = {
     Assert.usage(lengthKind eq LengthKind.Prefixed)
-    val ev = new PrefixedLengthEv(lengthExpr, erd)
+    val ev = new PrefixedLengthEv(prefixedLengthExpr, erd)
     ev.compile()
     ev
   }

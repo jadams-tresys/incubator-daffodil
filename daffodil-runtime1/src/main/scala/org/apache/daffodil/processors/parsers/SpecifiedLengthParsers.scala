@@ -125,6 +125,21 @@ class SpecifiedLengthExplicitParser(
   }
 }
 
+class SpecifiedLengthPrefixedParser(
+  eParser: Parser,
+  erd: ElementRuntimeData,
+  lengthEv: Evaluatable[JLong],
+  toBits: Int)
+  extends SpecifiedLengthParserBase(eParser, erd) {
+
+  final override def getBitLength(s: PState): MaybeULong = {
+    val nBytesAsAny = lengthEv.evaluate(s)
+    val nBytes = Numbers.asLong(nBytesAsAny)
+    MaybeULong(nBytes * toBits)
+  }
+}
+
+
 class SpecifiedLengthImplicitParser(
   eParser: Parser,
   erd: ElementRuntimeData,

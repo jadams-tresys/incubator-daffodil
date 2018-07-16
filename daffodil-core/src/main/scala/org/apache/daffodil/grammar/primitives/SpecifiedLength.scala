@@ -151,3 +151,31 @@ class SpecifiedLengthImplicitCharacters(e: ElementBase, eGram: => Gram, nChars: 
     e.elementRuntimeData,
     nChars)
 }
+
+class SpecifiedLengthPrefixed(e: ElementBase, eGram: => Gram, bitsMultiplier: Int)
+  extends SpecifiedLengthCombinatorBase(e, eGram)
+  with SpecifiedLengthExplicitImplicitUnparserMixin {
+
+  Assert.usage(bitsMultiplier > 0)
+
+  lazy val kind = "Prefixed_" + e.lengthUnits.toString
+
+  lazy val parser: Parser = new SpecifiedLengthExplicitParser(
+    eParser,
+    e.elementRuntimeData,
+    e.lengthEv,
+    bitsMultiplier)
+
+}
+
+class SpecifiedLengthPrefixedCharacters(e: ElementBase, eGram: => Gram)
+  extends SpecifiedLengthCombinatorBase(e, eGram)
+  with SpecifiedLengthExplicitImplicitUnparserMixin {
+
+  val kind = "PrefixedCharacters"
+
+  lazy val parser: Parser = new SpecifiedLengthExplicitCharactersParser(
+    eParser,
+    e.elementRuntimeData,
+    e.lengthEv)
+}

@@ -105,6 +105,8 @@ import org.apache.daffodil.grammar.primitives.RightFill
 import org.apache.daffodil.grammar.primitives.SimpleNilOrValue
 import org.apache.daffodil.grammar.primitives.SpecifiedLengthExplicit
 import org.apache.daffodil.grammar.primitives.SpecifiedLengthExplicitCharacters
+import org.apache.daffodil.grammar.primitives.SpecifiedLengthPrefixed
+import org.apache.daffodil.grammar.primitives.SpecifiedLengthPrefixedCharacters
 import org.apache.daffodil.grammar.primitives.SpecifiedLengthImplicit
 import org.apache.daffodil.grammar.primitives.SpecifiedLengthImplicitCharacters
 import org.apache.daffodil.grammar.primitives.SpecifiedLengthPattern
@@ -1027,6 +1029,13 @@ trait ElementBaseGrammarMixin
       case LengthKind.Implicit if isComplexType => body // for complex types, implicit means "roll up from the bottom"
       case LengthKind.EndOfParent if isComplexType => notYetImplemented("lengthKind='endOfParent' for complex type")
       case LengthKind.EndOfParent => notYetImplemented("lengthKind='endOfParent' for simple type")
+      case LengthKind.Prefixed if bitsMultiplier != 0 =>
+        new SpecifiedLengthPrefixed(this, body, bitsMultiplier)
+      case LengthKind.Prefixed => {
+        Assert.invariant(!knownEncodingIsFixedWidth)
+        Assert.invariant(lengthUnits eq LengthUnits.Characters)
+        new SpecifiedLengthPrefixedCharacters(this, body)
+      }
       case _ => {
         // TODO: implement other specified length like prefixed and end of parent
         // for now, no restriction
