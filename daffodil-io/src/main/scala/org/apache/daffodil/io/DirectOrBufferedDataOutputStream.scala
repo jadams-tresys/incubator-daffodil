@@ -488,8 +488,7 @@ class DirectOrBufferedDataOutputStream private[io] (
       var keepMerging = true
       while (directStream._following.isDefined && keepMerging) {
         val first = directStream._following.get
-        keepMerging =
-          first.isFinished // continue until AFTER we merge forward into the first non-finished successor
+        keepMerging = first.isFinished // continue until AFTER we merge forward into the first non-finished successor
         Assert.invariant(first.isBuffering)
 
         Logger.log.debug(s"merging direct DOS $directStream into DOS $first")

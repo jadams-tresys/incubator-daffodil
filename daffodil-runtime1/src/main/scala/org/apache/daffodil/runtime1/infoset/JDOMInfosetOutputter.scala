@@ -33,8 +33,7 @@ class JDOMInfosetOutputter extends InfosetOutputter {
   private var result: Maybe[org.jdom2.Document] = Maybe.Nope
   private val xsiNS = org.jdom2.Namespace.getNamespace("xsi", XMLUtils.XSI_NAMESPACE.toString)
 
-  def reset()
-    : Unit = { // call to reuse these. When first constructed no reset call is necessary.
+  def reset(): Unit = { // call to reuse these. When first constructed no reset call is necessary.
     result = Maybe.Nope
     stack.clear()
   }

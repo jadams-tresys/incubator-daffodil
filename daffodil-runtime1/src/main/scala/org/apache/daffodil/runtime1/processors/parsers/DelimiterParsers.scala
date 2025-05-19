@@ -39,8 +39,7 @@ object DelimiterTextType extends Enum {
   case object Initiator extends Type
   case object Separator extends Type
   case object Terminator extends Type
-  case object Other
-    extends Type /* for DelimiterDFAs that are things like escapes that we have other ways of tracking what they are */
+  case object Other extends Type /* for DelimiterDFAs that are things like escapes that we have other ways of tracking what they are */
 }
 
 class DelimiterTextParser(

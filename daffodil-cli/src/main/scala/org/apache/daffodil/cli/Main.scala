@@ -1354,8 +1354,9 @@ class Main(
                         else ""
                       val dataHex =
                         if (destArrayFilled)
-                          s"\nLeft over data (Hex) starting at byte ${curBytePosition1b} is: (0x${destArray.map { a =>
-                              f"$a%02x"
+                          s"\nLeft over data (Hex) starting at byte ${curBytePosition1b} is: (0x${destArray.map {
+                              a =>
+                                f"$a%02x"
                             }.mkString}...)"
                         else ""
                       val remainingBits =

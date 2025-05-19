@@ -39,8 +39,7 @@ class W3CDOMInfosetOutputter extends InfosetOutputter {
   private val stack = new MStackOf[Node]
   private var result: Maybe[Document] = Maybe.Nope
 
-  def reset()
-    : Unit = { // call to reuse these. When first constructed no reset call is necessary.
+  def reset(): Unit = { // call to reuse these. When first constructed no reset call is necessary.
     result = Maybe.Nope
     document = null
     stack.clear()

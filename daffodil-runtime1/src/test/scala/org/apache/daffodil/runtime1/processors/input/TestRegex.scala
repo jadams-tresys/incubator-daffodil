@@ -1758,8 +1758,7 @@ class TestRegex extends RegexParsers {
   lazy val parsed1 = parseAll(t1, rdr1)
 
   @Test def testRegexNoWSLongestMatch(): Unit = {
-    skipWS =
-      true // this is the default setting for scala comb. parsers, but we have no ws so it doesn't matter really.
+    skipWS = true // this is the default setting for scala comb. parsers, but we have no ws so it doesn't matter really.
     assertTrue(parsed1.successful)
     val a = parsed1.get
     // println(a)

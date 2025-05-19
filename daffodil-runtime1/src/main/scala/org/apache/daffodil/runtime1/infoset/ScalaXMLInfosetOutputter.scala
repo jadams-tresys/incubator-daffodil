@@ -36,8 +36,7 @@ class ScalaXMLInfosetOutputter(showFreedInfo: Boolean = false) extends InfosetOu
   protected val stack = new MStackOf[ListBuffer[scala.xml.Node]]
   private var resultNode: Maybe[scala.xml.Node] = Maybe.Nope
 
-  def reset()
-    : Unit = { // call to reuse these. When first constructed no reset call is necessary.
+  def reset(): Unit = { // call to reuse these. When first constructed no reset call is necessary.
     resultNode = Maybe.Nope
     stack.clear()
   }

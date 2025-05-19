@@ -54,8 +54,7 @@ class DataDumper {
   protected sealed trait BinaryKind extends Kind
   protected sealed trait HexKind extends BinaryKind // hexadecimal
   protected sealed trait Direction
-  protected sealed trait RTL
-    extends Direction // used with least-signif-bit first data like mil-std-2045
+  protected sealed trait RTL extends Direction // used with least-signif-bit first data like mil-std-2045
   protected sealed trait LTR extends Direction
   case class TextOnly(override val optCharset: Option[String] = None)
     extends TextKind(optCharset)

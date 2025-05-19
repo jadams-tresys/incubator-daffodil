@@ -117,8 +117,7 @@ abstract class TextDelimitedParserBase(
                 beforeDelimiter
               ) // reposition input to where we were trying to find a delimiter (but did not)
               beforeDelimiter = DataInputStream.MarkPos.NoMarkPos
-              fieldReg.actionNum =
-                fieldReg.actionNum + 1 // but force it to goto next rule so it won't just retry what it just did.
+              fieldReg.actionNum = fieldReg.actionNum + 1 // but force it to goto next rule so it won't just retry what it just did.
               stillSearching = true
             }
           }
@@ -287,8 +286,7 @@ class TextDelimitedParserWithEscapeBlock(
       Assert.invariant(beforeDelimiter =#= DataInputStream.MarkPos.NoMarkPos)
       fieldEsc.run(fieldRegister)
       val dfaStatus = fieldRegister.status
-      beforeDelimiter =
-        input.markPos // at this point the input is one past the end of the field.
+      beforeDelimiter = input.markPos // at this point the input is one past the end of the field.
       fieldRegister.actionNum = 0
 
       dfaStatus match {

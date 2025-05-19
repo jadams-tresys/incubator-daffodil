@@ -544,8 +544,7 @@ a few lines of pointless text like this.""".replace("\r\n", "\n").replace("\n", 
   }
 
   val le32BitData = Array[Byte](0x01, // BE MSBF
-    0x43, 0x33, 0x33,
-    0x32, // fourbyteswap + LE LSBF (parsed right to left four bytes at a time)
+    0x43, 0x33, 0x33, 0x32, // fourbyteswap + LE LSBF (parsed right to left four bytes at a time)
     0x55, 0x54, // fourbyteswap + LE LSBF
     0x67) // BE MSBF
 

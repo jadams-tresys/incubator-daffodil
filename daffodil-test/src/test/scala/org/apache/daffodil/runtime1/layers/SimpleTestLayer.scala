@@ -115,8 +115,7 @@ final class STL_BadMissingSetter() extends TLayer("stlBadMissingSetter", "urn:ST
 
 final class STL_BadMissingSetterArg() extends TLayer("stlBadMissingSetterArg", "urn:STL") {
 
-  private[layers] def setLayerVariableParameters()
-    : Unit = { // Whoops. Error is that the setter arg intVar is missing
+  private[layers] def setLayerVariableParameters(): Unit = { // Whoops. Error is that the setter arg intVar is missing
     this.intVar = 42
     this.stringVar = "forty two"
   }
