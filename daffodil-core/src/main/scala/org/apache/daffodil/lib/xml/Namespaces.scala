@@ -42,15 +42,39 @@ object NS extends UniquenessCache[URI, NS] {
     super.apply(uri)
   }
 
+  /**
+   * Fast path for repeated raw namespace strings (e.g. resolving next-elements
+   * during unparse, where the same handful of namespace URI strings recur once
+   * per element in a document). The uniqueness cache above is a
+   * ReentrantReadWriteLock-guarded WeakHashMap keyed by URI, so even a cache
+   * hit there requires first parsing the string via URI.create and then taking
+   * a lock - fine for schema-compile-time use, but real per-call overhead on a
+   * per-element hot path. This map memoizes by the raw string itself, so a
+   * previously-seen string never reaches URI.create or the lock at all.
+   *
+   * Unlike the uniqueness cache, entries here are never evicted; this is
+   * bounded in practice by the number of distinct namespace URI strings an
+   * application actually uses, which is small and fixed per schema.
+   */
+  private val stringToNS = new java.util.concurrent.ConcurrentHashMap[String, NS]()
+
   def apply(nsString: String): NS = {
-    // NoNamespace and UnspecifiedNamespace do not have a URI, and so they are
-    // not retrieved from the uniqueness cache
-    if (nsString == null || nsString == "" || nsString == NoNamespace.toString) {
-      NoNamespace
-    } else if (nsString == UnspecifiedNamespace.toString) {
-      UnspecifiedNamespace
-    } else {
-      apply(URI.create(nsString))
+    if (nsString == null) NoNamespace
+    else {
+      val cached = stringToNS.get(nsString)
+      if (cached ne null) cached
+      else {
+        val ns =
+          if (nsString == "" || nsString == NoNamespace.toString) {
+            NoNamespace
+          } else if (nsString == UnspecifiedNamespace.toString) {
+            UnspecifiedNamespace
+          } else {
+            apply(URI.create(nsString))
+          }
+        stringToNS.put(nsString, ns)
+        ns
+      }
     }
   }
 
